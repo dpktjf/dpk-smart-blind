@@ -1,0 +1,7 @@
+{
+    "name": "DPK Smart Blind",
+    "country": "ALL",
+    "hide_default_branch": true,
+    "homeassistant": "2024.10.1",
+    "render_readme": true
+}

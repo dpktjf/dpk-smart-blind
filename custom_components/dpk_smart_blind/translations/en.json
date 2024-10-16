@@ -1,0 +1,48 @@
+{
+    "title": "DPK Trading",
+    "config": {
+        "step": {
+            "user": {
+                "title": "",
+                "description": "Create a sensor that calculates take profit and stop loss targets.",
+                "data": {
+                    "name": "Name",
+                    "yahoo_entity_id": "Ticker",
+                    "trade_price": "Trade price",
+                    "take_profit": "Profit target %",
+                    "stop_loss": "Loss target %"
+                },
+                "data_description": {
+                    "yahoo_entity_id": "Name of the entity holding the latest price for this position.",
+                    "trade_price": "Price position entered into.",
+                    "take_profit": "Target profit level.",
+                    "stop_loss": "Max stop loss level."
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "yahoo_entity_id": "Ticker",
+                    "trade_price": "Trade price",
+                    "take_profit": "Profit target %",
+                    "stop_loss": "Loss target %"
+                },
+                "data_description": {
+                    "yahoo_entity_id": "Name of the entity holding the latest price for this position.",
+                    "trade_price": "Price position entered into.",
+                    "take_profit": "Target profit level.",
+                    "stop_loss": "Max stop loss level."
+                }
+            }
+        }
+    },
+    "services": {
+        "reload": {
+            "name": "[%key:common::action::reload%]",
+            "description": "Reloads ...."
+        }
+    }
+}
