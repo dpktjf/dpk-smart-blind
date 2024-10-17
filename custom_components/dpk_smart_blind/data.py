@@ -12,11 +12,11 @@ if TYPE_CHECKING:
     from .coordinator import DPKTradingDataUpdateCoordinator
 
 
-type DPKTradingConfigEntry = ConfigEntry[DPKTradingData]
+type DPKSmartBlindConfigEntry = ConfigEntry[DPKSmartBlindData]
 
 
 @dataclass
-class DPKTradingData:
+class DPKSmartBlindData:
     """Data for the ETO Smart Zone Calculator."""
 
     name: str

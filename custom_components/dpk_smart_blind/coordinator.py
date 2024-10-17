@@ -18,34 +18,34 @@ from .const import DOMAIN, LOGGER
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
 
-    from .data import DPKTradingConfigEntry
+    from .data import DPKSmartBlindConfigEntry
 
 
 # https://developers.home-assistant.io/docs/integration_fetching_data#coordinated-single-api-poll-for-data-for-all-entities
 class DPKTradingDataUpdateCoordinator(DataUpdateCoordinator):
     """Class to manage fetching data from the API."""
 
-    config_entry: DPKTradingConfigEntry
+    config_entry: DPKSmartBlindConfigEntry
 
     def __init__(
         self,
-        eto_client: DPKSmartBlindAPI,
+        client: DPKSmartBlindAPI,
         hass: HomeAssistant,
     ) -> None:
         """Initialize."""
-        self._eto_client = eto_client
+        self._client = client
 
         super().__init__(
             hass=hass,
             logger=LOGGER,
             name=DOMAIN,
-            update_interval=timedelta(minutes=10),
+            update_interval=timedelta(minutes=5),
         )
 
     async def _async_update_data(self) -> Any:
         """Update data via library."""
         try:
-            return await self._eto_client.async_get_data()
+            return await self._client.async_get_data()
         except DPKSmartBlindAuthenticationError as exception:
             raise ConfigEntryAuthFailed(exception) from exception
         except DPKSmartBlindError as exception:
@@ -54,4 +54,4 @@ class DPKTradingDataUpdateCoordinator(DataUpdateCoordinator):
     @property
     def eto_client(self) -> DPKSmartBlindAPI:
         """Getter."""
-        return self._eto_client
+        return self._client

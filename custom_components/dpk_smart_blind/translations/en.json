@@ -1,22 +1,16 @@
 {
-    "title": "DPK Trading",
+    "title": "DPK Smart Blind",
     "config": {
         "step": {
             "user": {
                 "title": "",
-                "description": "Create a sensor that calculates take profit and stop loss targets.",
+                "description": "Create a sensor that calculates shadow length given blind height in window.",
                 "data": {
                     "name": "Name",
-                    "yahoo_entity_id": "Ticker",
-                    "trade_price": "Trade price",
-                    "take_profit": "Profit target %",
-                    "stop_loss": "Loss target %"
+                    "window_height": "Window height"
                 },
                 "data_description": {
-                    "yahoo_entity_id": "Name of the entity holding the latest price for this position.",
-                    "trade_price": "Price position entered into.",
-                    "take_profit": "Target profit level.",
-                    "stop_loss": "Max stop loss level."
+                    "window_height": "Height of blind casting shadown in window"
                 }
             }
         }
@@ -25,16 +19,10 @@
         "step": {
             "init": {
                 "data": {
-                    "yahoo_entity_id": "Ticker",
-                    "trade_price": "Trade price",
-                    "take_profit": "Profit target %",
-                    "stop_loss": "Loss target %"
+                    "window_height": "Window height"
                 },
                 "data_description": {
-                    "yahoo_entity_id": "Name of the entity holding the latest price for this position.",
-                    "trade_price": "Price position entered into.",
-                    "take_profit": "Target profit level.",
-                    "stop_loss": "Max stop loss level."
+                    "window_height": "Height of blind casting shadown in window"
                 }
             }
         }

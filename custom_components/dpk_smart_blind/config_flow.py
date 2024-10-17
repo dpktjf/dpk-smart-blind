@@ -6,9 +6,6 @@ import logging
 from typing import Any
 
 import voluptuous as vol
-from homeassistant.components.sensor.const import (
-    DOMAIN as SENSOR_DOMAIN,
-)
 from homeassistant.config_entries import (
     ConfigEntry,
     ConfigFlow,
@@ -21,13 +18,10 @@ from homeassistant.const import (
     CONF_NAME,
 )
 from homeassistant.core import callback
-from homeassistant.helpers import selector
 
 from .const import (
-    CONF_STOP_LOSS,
-    CONF_TAKE_PROFIT,
-    CONF_TRADE_PRICE,
-    CONF_YAHOO_ENTITY_ID,
+    CONF_SHADOW_LENGTH,
+    CONF_WINDOW_HEIGHT,
     CONFIG_FLOW_VERSION,
     DOMAIN,
 )
@@ -35,7 +29,7 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
-class DPKTradingConfigFlow(ConfigFlow, domain=DOMAIN):
+class DPKSmartBlindConfigFlow(ConfigFlow, domain=DOMAIN):
     """Config flow for API."""
 
     VERSION = CONFIG_FLOW_VERSION
@@ -44,9 +38,9 @@ class DPKTradingConfigFlow(ConfigFlow, domain=DOMAIN):
     @callback
     def async_get_options_flow(
         config_entry: ConfigEntry,
-    ) -> DPKTradingOptionsFlow:
+    ) -> DPKSmartBlindOptionsFlow:
         """Get the options flow for this handler."""
-        return DPKTradingOptionsFlow(config_entry)
+        return DPKSmartBlindOptionsFlow(config_entry)
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None
@@ -58,19 +52,8 @@ class DPKTradingConfigFlow(ConfigFlow, domain=DOMAIN):
                 data_schema=vol.Schema(
                     {
                         vol.Required(CONF_NAME): str,
-                        vol.Required(CONF_YAHOO_ENTITY_ID): selector.EntitySelector(
-                            selector.EntitySelectorConfig(
-                                domain=[SENSOR_DOMAIN],
-                                multiple=False,
-                            ),
-                        ),
-                        vol.Required(CONF_TRADE_PRICE): float,
-                        vol.Required(CONF_TAKE_PROFIT, default=50): vol.All(
-                            int, vol.Range(min=1, max=100)
-                        ),
-                        vol.Required(CONF_STOP_LOSS, default=50): vol.All(
-                            int, vol.Range(min=1, max=100)
-                        ),
+                        vol.Required(CONF_WINDOW_HEIGHT): float,
+                        vol.Required(CONF_SHADOW_LENGTH): float,
                     }
                 ),
             )
@@ -85,7 +68,7 @@ class DPKTradingConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 
 
-class DPKTradingOptionsFlow(OptionsFlow):
+class DPKSmartBlindOptionsFlow(OptionsFlow):
     """Handle options."""
 
     def __init__(self, config_entry: ConfigEntry) -> None:
@@ -103,27 +86,14 @@ class DPKTradingOptionsFlow(OptionsFlow):
             step_id="init",
             data_schema=vol.Schema(
                 {
-                    vol.Required(
-                        CONF_YAHOO_ENTITY_ID,
-                        default=self.config_entry.options[CONF_YAHOO_ENTITY_ID],
-                    ): selector.EntitySelector(
-                        selector.EntitySelectorConfig(
-                            domain=[SENSOR_DOMAIN],
-                            multiple=False,
-                        ),
-                    ),
                     vol.Optional(
-                        CONF_TRADE_PRICE,
-                        default=self.config_entry.options[CONF_TRADE_PRICE],
+                        CONF_WINDOW_HEIGHT,
+                        default=self.config_entry.options[CONF_WINDOW_HEIGHT],
                     ): vol.Coerce(float),
                     vol.Optional(
-                        CONF_TAKE_PROFIT,
-                        default=self.config_entry.options[CONF_TAKE_PROFIT],
-                    ): vol.All(int, vol.Range(min=1, max=100)),
-                    vol.Optional(
-                        CONF_STOP_LOSS,
-                        default=self.config_entry.options[CONF_STOP_LOSS],
-                    ): vol.All(int, vol.Range(min=1, max=100)),
+                        CONF_SHADOW_LENGTH,
+                        default=self.config_entry.options[CONF_SHADOW_LENGTH],
+                    ): vol.Coerce(float),
                 }
             ),
         )

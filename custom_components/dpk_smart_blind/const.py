@@ -14,18 +14,14 @@ DEFAULT_NAME = "DPK Smart Blind"
 DEFAULT_RETRY = 60
 
 # entities for data
-CONF_YAHOO_ENTITY_ID = "yahoo_entity_id"
-CONF_TRADE_DATE = "trade_date"
-CONF_TRADE_PRICE = "trade_price"
-CONF_TRADE_QUANTITY = "trade_quantity"
-CONF_STOP_LOSS = "stop_loss"
-CONF_TAKE_PROFIT = "take_profit"
-CONF_HORIZON = "horizon"
+CONF_WINDOW_HEIGHT = "window_height"
+CONF_SHADOW_LENGTH = "shadow_length"
 
-ATTR_RETURN = "return"
-ATTR_ASOF = "as_of"
-ATTR_CURRENT_PRICE = "current_price"
-ATTR_ACTION = "action"
+ATTR_AZIMUTH = "azimuth"
+ATTR_ELEVATION = "elevation"
+ATTR_SHADOW_LENGTH = "calc_shadow_length"
+ATTR_WINDOW_HEIGHT = "calc_window_height"
+ATTR_NOW = "utc_now"
 
 ATTR_ACTION_SIT = "sit"
 ATTR_ACTION_STOP = "stop"

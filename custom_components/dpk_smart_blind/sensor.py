@@ -9,19 +9,22 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorEntityDescription,
 )
-from homeassistant.components.sensor.const import SensorStateClass
-from homeassistant.const import PERCENTAGE
+from homeassistant.components.sensor.const import SensorDeviceClass, SensorStateClass
+from homeassistant.const import (
+    UnitOfLength,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 
 from custom_components.dpk_smart_blind.const import (
-    ATTR_ACTION,
-    ATTR_CURRENT_PRICE,
-    ATTR_RETURN,
+    ATTR_AZIMUTH,
+    ATTR_ELEVATION,
+    ATTR_NOW,
+    ATTR_SHADOW_LENGTH,
+    ATTR_WINDOW_HEIGHT,
     ATTRIBUTION,
-    CONF_STOP_LOSS,
-    CONF_TAKE_PROFIT,
-    CONF_TRADE_PRICE,
+    CONF_SHADOW_LENGTH,
+    CONF_WINDOW_HEIGHT,
     DEFAULT_NAME,
     DOMAIN,
     MANUFACTURER,
@@ -32,15 +35,16 @@ if TYPE_CHECKING:
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
     from .coordinator import DPKTradingDataUpdateCoordinator
-    from .data import DPKTradingConfigEntry
+    from .data import DPKSmartBlindConfigEntry
 
 SENSOR_TYPES: tuple[SensorEntityDescription, ...] = (
     SensorEntityDescription(
         key=DOMAIN,
-        name="Trading return",
-        icon="mdi:currency-usd",
-        native_unit_of_measurement=PERCENTAGE,
+        name="Smart Blind",
+        icon="mdi:sun-angle",
+        device_class=SensorDeviceClass.DISTANCE,
         state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=UnitOfLength.METERS,
     ),
 )
 _LOGGER = logging.getLogger(__name__)
@@ -48,7 +52,7 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(
     hass: HomeAssistant,  # noqa: ARG001 Unused function argument: `hass`
-    config_entry: DPKTradingConfigEntry,
+    config_entry: DPKSmartBlindConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the sensor platform."""
@@ -56,8 +60,8 @@ async def async_setup_entry(
     name = domain_data.name
     coordinator = domain_data.coordinator
 
-    entities: list[DPKTradingSensor] = [
-        DPKTradingSensor(
+    entities: list[DPKSmartBlindSensor] = [
+        DPKSmartBlindSensor(
             name,
             config_entry.entry_id,
             description,
@@ -68,8 +72,8 @@ async def async_setup_entry(
     async_add_entities(entities)
 
 
-class DPKTradingSensor(SensorEntity):
-    """ETO Smart Zone Sensor class."""
+class DPKSmartBlindSensor(SensorEntity):
+    """ETO Smart Blind Sensor class."""
 
     _attr_should_poll = False
     _attr_attribution = ATTRIBUTION
@@ -114,17 +118,18 @@ class DPKTradingSensor(SensorEntity):
     @property
     def native_value(self) -> str | None:
         """Return the native value of the sensor."""
-        return self._coordinator.data[ATTR_RETURN]
+        return self._coordinator.data[ATTR_SHADOW_LENGTH]
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return the device specific state attributes."""
         attributes: dict[str, Any] = {}
 
-        attributes[ATTR_ACTION] = self._coordinator.data[ATTR_ACTION]
-        attributes[ATTR_CURRENT_PRICE] = self._coordinator.data[ATTR_CURRENT_PRICE]
-        attributes[CONF_TRADE_PRICE] = self._coordinator.data[CONF_TRADE_PRICE]
-        attributes[CONF_TAKE_PROFIT] = self._coordinator.data[CONF_TAKE_PROFIT]
-        attributes[CONF_STOP_LOSS] = self._coordinator.data[CONF_STOP_LOSS]
+        attributes[ATTR_NOW] = self._coordinator.data[ATTR_NOW]
+        attributes[ATTR_AZIMUTH] = self._coordinator.data[ATTR_AZIMUTH]
+        attributes[ATTR_ELEVATION] = self._coordinator.data[ATTR_ELEVATION]
+        attributes[ATTR_WINDOW_HEIGHT] = self._coordinator.data[ATTR_WINDOW_HEIGHT]
+        attributes[CONF_WINDOW_HEIGHT] = self._coordinator.data[CONF_WINDOW_HEIGHT]
+        attributes[CONF_SHADOW_LENGTH] = self._coordinator.data[CONF_SHADOW_LENGTH]
 
         return attributes
