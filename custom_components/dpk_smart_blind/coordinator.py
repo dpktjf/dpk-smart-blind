@@ -39,7 +39,7 @@ class DPKTradingDataUpdateCoordinator(DataUpdateCoordinator):
             hass=hass,
             logger=LOGGER,
             name=DOMAIN,
-            update_interval=timedelta(minutes=5),
+            update_interval=timedelta(minutes=1),
         )
 
     async def _async_update_data(self) -> Any:

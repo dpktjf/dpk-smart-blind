@@ -11,6 +11,7 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.components.sensor.const import SensorDeviceClass, SensorStateClass
 from homeassistant.const import (
+    DEGREE,
     UnitOfLength,
 )
 from homeassistant.core import HomeAssistant
@@ -46,6 +47,20 @@ SENSOR_TYPES: tuple[SensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfLength.METERS,
     ),
+    SensorEntityDescription(
+        key=DOMAIN,
+        name="Smart Blind Elevation",
+        icon="mdi:sun-angle",
+        native_unit_of_measurement=DEGREE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    SensorEntityDescription(
+        key=DOMAIN,
+        name="Smart Blind Azimuth",
+        icon="mdi:sun-angle",
+        native_unit_of_measurement=DEGREE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
 )
 _LOGGER = logging.getLogger(__name__)
 
@@ -73,7 +88,7 @@ async def async_setup_entry(
 
 
 class DPKSmartBlindSensor(SensorEntity):
-    """ETO Smart Blind Sensor class."""
+    """Smart Blind Sensor class."""
 
     _attr_should_poll = False
     _attr_attribution = ATTRIBUTION
@@ -87,6 +102,7 @@ class DPKSmartBlindSensor(SensorEntity):
     ) -> None:
         """Initialize the sensor class."""
         self.entity_description = entity_description
+        self._name = entity_description.name
         self._coordinator = coordinator
         self.states: dict[str, Any] = {}
 
@@ -118,18 +134,23 @@ class DPKSmartBlindSensor(SensorEntity):
     @property
     def native_value(self) -> str | None:
         """Return the native value of the sensor."""
-        return self._coordinator.data[ATTR_SHADOW_LENGTH]
+        if self._name == "Smart Blind Azimuth":
+            return self._coordinator.data[ATTR_AZIMUTH]
+        elif self._name == "Smart Blind Elevation":
+            return self._coordinator.data[ATTR_ELEVATION]
+        else:
+            return self._coordinator.data[ATTR_SHADOW_LENGTH]
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return the device specific state attributes."""
         attributes: dict[str, Any] = {}
-
-        attributes[ATTR_NOW] = self._coordinator.data[ATTR_NOW]
-        attributes[ATTR_AZIMUTH] = self._coordinator.data[ATTR_AZIMUTH]
-        attributes[ATTR_ELEVATION] = self._coordinator.data[ATTR_ELEVATION]
-        attributes[ATTR_WINDOW_HEIGHT] = self._coordinator.data[ATTR_WINDOW_HEIGHT]
-        attributes[CONF_WINDOW_HEIGHT] = self._coordinator.data[CONF_WINDOW_HEIGHT]
-        attributes[CONF_SHADOW_LENGTH] = self._coordinator.data[CONF_SHADOW_LENGTH]
+        if self._name == "Smart Blind":
+            attributes[ATTR_NOW] = self._coordinator.data[ATTR_NOW]
+            attributes[ATTR_AZIMUTH] = self._coordinator.data[ATTR_AZIMUTH]
+            attributes[ATTR_ELEVATION] = self._coordinator.data[ATTR_ELEVATION]
+            attributes[ATTR_WINDOW_HEIGHT] = self._coordinator.data[ATTR_WINDOW_HEIGHT]
+            attributes[CONF_WINDOW_HEIGHT] = self._coordinator.data[CONF_WINDOW_HEIGHT]
+            attributes[CONF_SHADOW_LENGTH] = self._coordinator.data[CONF_SHADOW_LENGTH]
 
         return attributes
