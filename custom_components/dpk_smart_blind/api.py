@@ -133,6 +133,10 @@ class DPKSmartBlindAPI:
         """Perform performance calculation."""
         """
             tan(angleElevation) = windowHeight / shadedArea
+            TODO: desk area is different height to cover, so might need
+            to play around with that a bit... for now, assume same height
+            meaning the blind is actually a little higher than it really is...
+            keen to see what happens with that.
         """
 
         utc_now = datetime.datetime.now(datetime.UTC)
@@ -148,6 +152,6 @@ class DPKSmartBlindAPI:
         self._calc_data[ATTR_COVER_HEIGHT] = round(
             self._shaded_area * tan(rad(elevation)), 1
         )
-        self._calc_data[ATTR_COVER_SETTING] = (
-            round(self._calc_data[ATTR_COVER_HEIGHT] / self._window_height, 0) * 100
+        self._calc_data[ATTR_COVER_SETTING] = round(
+            self._calc_data[ATTR_COVER_HEIGHT] / self._window_height * 100, 0
         )
