@@ -19,7 +19,7 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import DPKSmartBlindAPI
 from .const import (
-    CONF_SHADOW_LENGTH,
+    CONF_SHADED_AREA,
     CONF_WINDOW_HEIGHT,
 )
 from .coordinator import DPKTradingDataUpdateCoordinator
@@ -51,7 +51,7 @@ async def async_setup_entry(
 
     api = DPKSmartBlindAPI(
         name=_name,
-        shadow_length=entry.options[CONF_SHADOW_LENGTH],
+        shaded_area=entry.options[CONF_SHADED_AREA],
         window_height=entry.options[CONF_WINDOW_HEIGHT],
         session=async_get_clientsession(hass),
         states=hass.states,

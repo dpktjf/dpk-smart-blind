@@ -14,11 +14,12 @@ from numpy import tan
 
 from custom_components.dpk_smart_blind.const import (
     ATTR_AZIMUTH,
+    ATTR_COVER_HEIGHT,
+    ATTR_COVER_SETTING,
     ATTR_ELEVATION,
     ATTR_NOW,
     ATTR_SHADOW_LENGTH,
-    ATTR_WINDOW_HEIGHT,
-    CONF_SHADOW_LENGTH,
+    CONF_SHADED_AREA,
     CONF_WINDOW_HEIGHT,
 )
 
@@ -64,7 +65,7 @@ class DPKSmartBlindAPI:
         self,
         name: str,
         window_height: float,
-        shadow_length: float,
+        shaded_area: float,
         session: aiohttp.ClientSession,
         states: StateMachine,
         hass: HomeAssistant,
@@ -76,7 +77,7 @@ class DPKSmartBlindAPI:
 
         self._name = name
         self._window_height = window_height
-        self._shadow_length = shadow_length
+        self._shaded_area = shaded_area
         self._session = session
         self._states = states
 
@@ -84,9 +85,10 @@ class DPKSmartBlindAPI:
         self._calc_data[ATTR_AZIMUTH] = STATE_UNKNOWN
         self._calc_data[ATTR_ELEVATION] = STATE_UNKNOWN
         self._calc_data[ATTR_SHADOW_LENGTH] = STATE_UNKNOWN
-        self._calc_data[ATTR_WINDOW_HEIGHT] = STATE_UNKNOWN
+        self._calc_data[ATTR_COVER_HEIGHT] = STATE_UNKNOWN
+        self._calc_data[ATTR_COVER_SETTING] = STATE_UNKNOWN
         self._calc_data[CONF_WINDOW_HEIGHT] = self._window_height
-        self._calc_data[CONF_SHADOW_LENGTH] = self._shadow_length
+        self._calc_data[CONF_SHADED_AREA] = self._shaded_area
 
     async def _get(self, ent: str) -> float:
         st = self._states.get(ent)
@@ -130,21 +132,22 @@ class DPKSmartBlindAPI:
     async def calc_return(self) -> None:
         """Perform performance calculation."""
         """
-            tan(angleElevation) = treeHeight / shadowLength
-            return = (current-trade)/trade
+            tan(angleElevation) = windowHeight / shadedArea
         """
 
         utc_now = datetime.datetime.now(datetime.UTC)
         self._calc_data[ATTR_NOW] = utc_now.isoformat()
-        self._calc_data[ATTR_AZIMUTH] = astral.sun.azimuth(
-            self._location.observer, utc_now
+        self._calc_data[ATTR_AZIMUTH] = round(
+            astral.sun.azimuth(self._location.observer, utc_now), 1
         )
-        self._calc_data[ATTR_ELEVATION] = astral.sun.elevation(
-            self._location.observer, utc_now
+        elevation = astral.sun.elevation(self._location.observer, utc_now)
+        self._calc_data[ATTR_ELEVATION] = round(elevation, 1)
+        self._calc_data[ATTR_SHADOW_LENGTH] = round(
+            self._window_height / tan(rad(elevation)), 1
         )
-        self._calc_data[ATTR_SHADOW_LENGTH] = self._window_height / tan(
-            rad(self._calc_data[ATTR_ELEVATION])
+        self._calc_data[ATTR_COVER_HEIGHT] = round(
+            self._shaded_area * tan(rad(elevation)), 1
         )
-        self._calc_data[ATTR_WINDOW_HEIGHT] = self._shadow_length * tan(
-            rad(self._calc_data[ATTR_ELEVATION])
+        self._calc_data[ATTR_COVER_SETTING] = (
+            round(self._calc_data[ATTR_COVER_HEIGHT] / self._window_height, 0) * 100
         )

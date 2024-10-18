@@ -15,14 +15,11 @@ DEFAULT_RETRY = 60
 
 # entities for data
 CONF_WINDOW_HEIGHT = "window_height"
-CONF_SHADOW_LENGTH = "shadow_length"
+CONF_SHADED_AREA = "shaded_area"
 
 ATTR_AZIMUTH = "azimuth"
 ATTR_ELEVATION = "elevation"
 ATTR_SHADOW_LENGTH = "calc_shadow_length"
-ATTR_WINDOW_HEIGHT = "calc_window_height"
+ATTR_COVER_HEIGHT = "calc_cover_height"
 ATTR_NOW = "utc_now"
-
-ATTR_ACTION_SIT = "sit"
-ATTR_ACTION_STOP = "stop"
-ATTR_ACTION_TAKE = "take"
+ATTR_COVER_SETTING = "cover_setting"

@@ -12,6 +12,7 @@ from homeassistant.components.sensor import (
 from homeassistant.components.sensor.const import SensorDeviceClass, SensorStateClass
 from homeassistant.const import (
     DEGREE,
+    PERCENTAGE,
     UnitOfLength,
 )
 from homeassistant.core import HomeAssistant
@@ -19,12 +20,13 @@ from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 
 from custom_components.dpk_smart_blind.const import (
     ATTR_AZIMUTH,
+    ATTR_COVER_HEIGHT,
+    ATTR_COVER_SETTING,
     ATTR_ELEVATION,
     ATTR_NOW,
     ATTR_SHADOW_LENGTH,
-    ATTR_WINDOW_HEIGHT,
     ATTRIBUTION,
-    CONF_SHADOW_LENGTH,
+    CONF_SHADED_AREA,
     CONF_WINDOW_HEIGHT,
     DEFAULT_NAME,
     DOMAIN,
@@ -40,25 +42,32 @@ if TYPE_CHECKING:
 
 SENSOR_TYPES: tuple[SensorEntityDescription, ...] = (
     SensorEntityDescription(
-        key=DOMAIN,
-        name="Smart Blind",
+        key=ATTR_SHADOW_LENGTH,
+        name="Smart Blind Shadow Length",
         icon="mdi:sun-angle",
         device_class=SensorDeviceClass.DISTANCE,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfLength.METERS,
     ),
     SensorEntityDescription(
-        key=DOMAIN,
+        key=ATTR_ELEVATION,
         name="Smart Blind Elevation",
         icon="mdi:sun-angle",
         native_unit_of_measurement=DEGREE,
         state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
-        key=DOMAIN,
+        key=ATTR_AZIMUTH,
         name="Smart Blind Azimuth",
         icon="mdi:sun-angle",
         native_unit_of_measurement=DEGREE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    SensorEntityDescription(
+        key=ATTR_COVER_SETTING,
+        name="Smart Blind Height",
+        icon="mdi:blinds",
+        native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
     ),
 )
@@ -102,7 +111,7 @@ class DPKSmartBlindSensor(SensorEntity):
     ) -> None:
         """Initialize the sensor class."""
         self.entity_description = entity_description
-        self._name = entity_description.name
+        self._key = entity_description.key
         self._coordinator = coordinator
         self.states: dict[str, Any] = {}
 
@@ -134,23 +143,19 @@ class DPKSmartBlindSensor(SensorEntity):
     @property
     def native_value(self) -> str | None:
         """Return the native value of the sensor."""
-        if self._name == "Smart Blind Azimuth":
-            return self._coordinator.data[ATTR_AZIMUTH]
-        elif self._name == "Smart Blind Elevation":
-            return self._coordinator.data[ATTR_ELEVATION]
-        else:
-            return self._coordinator.data[ATTR_SHADOW_LENGTH]
+        return self._coordinator.data.get(self._key)
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return the device specific state attributes."""
         attributes: dict[str, Any] = {}
-        if self._name == "Smart Blind":
+        if self._key == ATTR_SHADOW_LENGTH:
             attributes[ATTR_NOW] = self._coordinator.data[ATTR_NOW]
+            attributes[CONF_WINDOW_HEIGHT] = self._coordinator.data[CONF_WINDOW_HEIGHT]
+            attributes[CONF_SHADED_AREA] = self._coordinator.data[CONF_SHADED_AREA]
             attributes[ATTR_AZIMUTH] = self._coordinator.data[ATTR_AZIMUTH]
             attributes[ATTR_ELEVATION] = self._coordinator.data[ATTR_ELEVATION]
-            attributes[ATTR_WINDOW_HEIGHT] = self._coordinator.data[ATTR_WINDOW_HEIGHT]
-            attributes[CONF_WINDOW_HEIGHT] = self._coordinator.data[CONF_WINDOW_HEIGHT]
-            attributes[CONF_SHADOW_LENGTH] = self._coordinator.data[CONF_SHADOW_LENGTH]
+            attributes[ATTR_COVER_HEIGHT] = self._coordinator.data[ATTR_COVER_HEIGHT]
+            attributes[ATTR_COVER_SETTING] = self._coordinator.data[ATTR_COVER_SETTING]
 
         return attributes

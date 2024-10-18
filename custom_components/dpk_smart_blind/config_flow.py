@@ -20,7 +20,7 @@ from homeassistant.const import (
 from homeassistant.core import callback
 
 from .const import (
-    CONF_SHADOW_LENGTH,
+    CONF_SHADED_AREA,
     CONF_WINDOW_HEIGHT,
     CONFIG_FLOW_VERSION,
     DOMAIN,
@@ -53,7 +53,7 @@ class DPKSmartBlindConfigFlow(ConfigFlow, domain=DOMAIN):
                     {
                         vol.Required(CONF_NAME): str,
                         vol.Required(CONF_WINDOW_HEIGHT): float,
-                        vol.Required(CONF_SHADOW_LENGTH): float,
+                        vol.Required(CONF_SHADED_AREA): float,
                     }
                 ),
             )
@@ -86,13 +86,13 @@ class DPKSmartBlindOptionsFlow(OptionsFlow):
             step_id="init",
             data_schema=vol.Schema(
                 {
-                    vol.Optional(
+                    vol.Required(
                         CONF_WINDOW_HEIGHT,
                         default=self.config_entry.options[CONF_WINDOW_HEIGHT],
                     ): vol.Coerce(float),
-                    vol.Optional(
-                        CONF_SHADOW_LENGTH,
-                        default=self.config_entry.options[CONF_SHADOW_LENGTH],
+                    vol.Required(
+                        CONF_SHADED_AREA,
+                        default=self.config_entry.options[CONF_SHADED_AREA],
                     ): vol.Coerce(float),
                 }
             ),

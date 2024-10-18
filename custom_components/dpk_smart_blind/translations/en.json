@@ -7,10 +7,12 @@
                 "description": "Create a sensor that calculates shadow length given blind height in window.",
                 "data": {
                     "name": "Name",
-                    "window_height": "Window height"
+                    "window_height": "Window Height",
+                    "shaded_area": "Shaded Area"
                 },
                 "data_description": {
-                    "window_height": "Height of blind casting shadown in window"
+                    "window_height": "Height of blind casting shadown in window in meters",
+                    "shaded_area": "Desired distance from cover to shaded area in meters"
                 }
             }
         }
@@ -19,10 +21,12 @@
         "step": {
             "init": {
                 "data": {
-                    "window_height": "Window height"
+                    "window_height": "Window height",
+                    "shaded_area": "Distance from cover to shaded area in meters"
                 },
                 "data_description": {
-                    "window_height": "Height of blind casting shadown in window"
+                    "window_height": "Height of blind casting shadown in window in meters",
+                    "shaded_area": "Desired distance from cover to shaded area in meters"
                 }
             }
         }
