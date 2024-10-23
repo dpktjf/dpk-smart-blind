@@ -16,6 +16,9 @@ from homeassistant.const import (
     Platform,
 )
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.event import (
+    async_track_state_change_event,
+)
 
 from .api import DPKSmartBlindAPI
 from .const import (
@@ -59,6 +62,15 @@ async def async_setup_entry(
     )
     # https://developers.home-assistant.io/docs/integration_fetching_data#coordinated-single-api-poll-for-data-for-all-entities
     coordinator = DPKTradingDataUpdateCoordinator(api, hass)
+    _entities = ["sun.sun"]
+    entry.async_on_unload(
+        async_track_state_change_event(
+            hass,
+            _entities,
+            coordinator.async_check_entity_state_change,
+        )
+    )
+
     await coordinator.async_config_entry_first_refresh()
 
     entry.async_on_unload(entry.add_update_listener(async_update_options))

@@ -13,10 +13,10 @@ from .api import (
     DPKSmartBlindAuthenticationError,
     DPKSmartBlindError,
 )
-from .const import DOMAIN, LOGGER
+from .const import _LOGGER, DOMAIN, LOGGER
 
 if TYPE_CHECKING:
-    from homeassistant.core import HomeAssistant
+    from homeassistant.core import Event, EventStateChangedData, HomeAssistant
 
     from .data import DPKSmartBlindConfigEntry
 
@@ -39,7 +39,7 @@ class DPKTradingDataUpdateCoordinator(DataUpdateCoordinator):
             hass=hass,
             logger=LOGGER,
             name=DOMAIN,
-            update_interval=timedelta(minutes=1),
+            update_interval=timedelta(minutes=10),
         )
 
     async def _async_update_data(self) -> Any:
@@ -50,6 +50,13 @@ class DPKTradingDataUpdateCoordinator(DataUpdateCoordinator):
             raise ConfigEntryAuthFailed(exception) from exception
         except DPKSmartBlindError as exception:
             raise UpdateFailed(exception) from exception
+
+    async def async_check_entity_state_change(
+        self, event: Event[EventStateChangedData]
+    ) -> None:
+        """Fetch and process state change event."""
+        _LOGGER.debug("Entity state change: %s", event)
+        """self.state_change = True"""
 
     @property
     def eto_client(self) -> DPKSmartBlindAPI:
