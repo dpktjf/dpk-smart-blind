@@ -12,3 +12,34 @@ logger:
   default: info
   logs:
     custom_components.dpk_smart_blind: debug
+
+# Example configuration.yaml entry
+mqtt:
+  - cover:
+      name: "MQTT Cover Test"
+      #publish
+      command_topic: "rpih/pi01/test/test-position/command"
+      set_position_topic: "rpih/pi01/test/test-position/set-position"
+      #receive
+      position_topic: "rpih/pi01/test/test-position/state"
+      position_template: "{{ value_json.position }}"
+      state_topic: "rpih/pi01/test/test-position/state"
+        # open, opening, closed, closing, stopped
+      value_template: "{{ value_json.state }}"
+      qos: 0
+      retain: false
+      availability:
+        topic: "rpih/pi01/availability"
+        payload_available: "online"
+        payload_not_available: "offline"
+      payload_open: "OPEN"
+      payload_close: "CLOSE"
+      payload_stop: "STOP"
+      position_open: 100
+      position_closed: 0
+      state_closed: "closed"
+      state_closing: "closing"
+      state_open: "open"
+      state_opening: "opening"
+      state_stopped: "stopped"
+      optimistic: false

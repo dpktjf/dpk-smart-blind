@@ -19,13 +19,16 @@ from custom_components.dpk_smart_blind.const import (
     ATTR_ELEVATION,
     ATTR_NOW,
     ATTR_SHADOW_LENGTH,
-    CONF_SHADED_AREA,
-    CONF_WINDOW_HEIGHT,
+    CONF_AZIMUTH,
+    CONF_DISTANCE,
+    CONF_HEIGHT_WIN,
 )
 
 if TYPE_CHECKING:
     import aiohttp
     from homeassistant.core import HomeAssistant, StateMachine
+
+    from .data import DPKSmartBlindConfigEntry
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -61,11 +64,10 @@ class DPKSmartBlindStartupError(
 class DPKSmartBlindAPI:
     """API Client."""
 
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
+        config: DPKSmartBlindConfigEntry,
         name: str,
-        window_height: float,
-        shaded_area: float,
         session: aiohttp.ClientSession,
         states: StateMachine,
         hass: HomeAssistant,
@@ -76,8 +78,7 @@ class DPKSmartBlindAPI:
         self._elevation = elevation
 
         self._name = name
-        self._window_height = window_height
-        self._shaded_area = shaded_area
+        self._config = config
         self._session = session
         self._states = states
 
@@ -87,8 +88,6 @@ class DPKSmartBlindAPI:
         self._calc_data[ATTR_SHADOW_LENGTH] = STATE_UNKNOWN
         self._calc_data[ATTR_COVER_HEIGHT] = STATE_UNKNOWN
         self._calc_data[ATTR_COVER_SETTING] = STATE_UNKNOWN
-        self._calc_data[CONF_WINDOW_HEIGHT] = self._window_height
-        self._calc_data[CONF_SHADED_AREA] = self._shaded_area
 
     async def _get(self, ent: str) -> float:
         st = self._states.get(ent)
@@ -147,11 +146,15 @@ class DPKSmartBlindAPI:
         elevation = astral.sun.elevation(self._location.observer, utc_now)
         self._calc_data[ATTR_ELEVATION] = round(elevation, 1)
         self._calc_data[ATTR_SHADOW_LENGTH] = round(
-            self._window_height / tan(rad(elevation)), 1
+            self._config.options[CONF_HEIGHT_WIN] / tan(rad(elevation)),
+            1,
         )
         self._calc_data[ATTR_COVER_HEIGHT] = round(
-            self._shaded_area * tan(rad(elevation)), 1
+            self._config.options[CONF_DISTANCE] * tan(rad(elevation)), 1
         )
         self._calc_data[ATTR_COVER_SETTING] = round(
-            self._calc_data[ATTR_COVER_HEIGHT] / self._window_height * 100, 0
+            self._calc_data[ATTR_COVER_HEIGHT]
+            / self._config.options[CONF_HEIGHT_WIN]
+            * 100,
+            0,
         )

@@ -26,8 +26,6 @@ from custom_components.dpk_smart_blind.const import (
     ATTR_NOW,
     ATTR_SHADOW_LENGTH,
     ATTRIBUTION,
-    CONF_SHADED_AREA,
-    CONF_WINDOW_HEIGHT,
     DEFAULT_NAME,
     DOMAIN,
     MANUFACTURER,
@@ -151,8 +149,6 @@ class DPKSmartBlindSensor(SensorEntity):
         attributes: dict[str, Any] = {}
         if self._key == ATTR_SHADOW_LENGTH:
             attributes[ATTR_NOW] = self._coordinator.data[ATTR_NOW]
-            attributes[CONF_WINDOW_HEIGHT] = self._coordinator.data[CONF_WINDOW_HEIGHT]
-            attributes[CONF_SHADED_AREA] = self._coordinator.data[CONF_SHADED_AREA]
             attributes[ATTR_AZIMUTH] = self._coordinator.data[ATTR_AZIMUTH]
             attributes[ATTR_ELEVATION] = self._coordinator.data[ATTR_ELEVATION]
             attributes[ATTR_COVER_HEIGHT] = self._coordinator.data[ATTR_COVER_HEIGHT]

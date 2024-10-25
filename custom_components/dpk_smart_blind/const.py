@@ -15,8 +15,15 @@ DEFAULT_NAME = "DPK Smart Blind"
 DEFAULT_RETRY = 60
 
 # entities for data
-CONF_WINDOW_HEIGHT = "window_height"
-CONF_SHADED_AREA = "shaded_area"
+CONF_AZIMUTH = "set_azimuth"
+CONF_DEFAULT_HEIGHT = "default_percentage"
+CONF_DISTANCE = "distance_shaded_area"
+CONF_ENTITIES = "group"
+CONF_FOV_LEFT = "fov_left"
+CONF_FOV_RIGHT = "fov_right"
+CONF_HEIGHT_WIN = "window_height"
+CONF_MAX_ELEVATION = "max_elevation"
+CONF_MIN_ELEVATION = "min_elevation"
 
 ATTR_AZIMUTH = "azimuth"
 ATTR_ELEVATION = "elevation"

@@ -7,7 +7,6 @@ https://github.com/dpktjf/eto-irrigation
 
 from __future__ import annotations
 
-import logging
 from datetime import timedelta
 from typing import TYPE_CHECKING
 
@@ -21,10 +20,7 @@ from homeassistant.helpers.event import (
 )
 
 from .api import DPKSmartBlindAPI
-from .const import (
-    CONF_SHADED_AREA,
-    CONF_WINDOW_HEIGHT,
-)
+from .const import _LOGGER
 from .coordinator import DPKTradingDataUpdateCoordinator
 from .data import DPKSmartBlindData
 
@@ -39,7 +35,6 @@ PLATFORMS: list[Platform] = [
 
 # https://homeassistantapi.readthedocs.io/en/latest/api.html
 
-_LOGGER = logging.getLogger(__name__)
 
 DEFAULT_SCAN_INTERVAL = timedelta(minutes=10)
 
@@ -50,17 +45,15 @@ async def async_setup_entry(
     entry: DPKSmartBlindConfigEntry,
 ) -> bool:
     """Set up this integration using UI."""
-    _name = entry.data[CONF_NAME]
-
+    _LOGGER.debug("setting up smart blind %s", entry.data[CONF_NAME])
     api = DPKSmartBlindAPI(
-        name=_name,
-        shaded_area=entry.options[CONF_SHADED_AREA],
-        window_height=entry.options[CONF_WINDOW_HEIGHT],
+        name=entry.data[CONF_NAME],
+        config=entry,
         session=async_get_clientsession(hass),
         states=hass.states,
         hass=hass,
     )
-    # https://developers.home-assistant.io/docs/integration_fetching_data#coordinated-single-api-poll-for-data-for-all-entities
+
     coordinator = DPKTradingDataUpdateCoordinator(api, hass)
     _entities = ["sun.sun"]
     entry.async_on_unload(
@@ -75,7 +68,7 @@ async def async_setup_entry(
 
     entry.async_on_unload(entry.add_update_listener(async_update_options))
 
-    entry.runtime_data = DPKSmartBlindData(_name, api, coordinator)
+    entry.runtime_data = DPKSmartBlindData(entry.data[CONF_NAME], api, coordinator)
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 

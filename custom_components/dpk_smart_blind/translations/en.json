@@ -1,6 +1,9 @@
 {
     "title": "DPK Smart Blind",
     "config": {
+        "error": {
+            "already_configured": "Smart blind already configured"
+        },
         "step": {
             "user": {
                 "title": "",
@@ -14,12 +17,38 @@
                     "window_height": "Height of blind casting shadown in window in meters",
                     "shaded_area": "Desired distance from cover to shaded area in meters"
                 }
+            },
+            "vertical": {
+                "data": {
+                    "set_azimuth": "Window Azimuth",
+                    "window_height": "Window Height",
+                    "distance_shaded_area": "Shaded Area",
+                    "fov_left": "Field of view left",
+                    "fov_right": "Field of view right",
+                    "group": "Cover Entities"
+                },
+                "data_description": {
+                    "set_azimuth": "Adjust Azimuth of window",
+                    "window_height": "Specify window height in meters",
+                    "distance_shaded_area": "Distance from cover to shaded area in meters",
+                    "fov_left": "Field of view angle to the left of the window center",
+                    "fov_right": "Field of view angle to the right of the window center",
+                    "group": "Select entities to control via integration"
+                }
             }
         }
     },
     "options": {
         "step": {
             "init": {
+                "menu_options": {
+                    "automation": "Modify Automation Configuration",
+                    "blind": "Fine-tune Blind Settings",
+                    "climate": "Edit Climate Configuration",
+                    "weather": "Edit Weather Configuration",
+                    "blind_spot": "Setup Blindspot",
+                    "interp": "Range Adjustment"
+                },
                 "data": {
                     "window_height": "Window height",
                     "shaded_area": "Distance from cover to shaded area in meters"
