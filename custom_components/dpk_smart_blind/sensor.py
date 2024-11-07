@@ -25,6 +25,7 @@ from custom_components.dpk_smart_blind.const import (
     ATTR_ELEVATION,
     ATTR_NOW,
     ATTR_SHADOW_LENGTH,
+    ATTR_SUN_STATE,
     ATTRIBUTION,
     DEFAULT_NAME,
     DOMAIN,
@@ -153,5 +154,6 @@ class DPKSmartBlindSensor(SensorEntity):
             attributes[ATTR_ELEVATION] = self._coordinator.data[ATTR_ELEVATION]
             attributes[ATTR_COVER_HEIGHT] = self._coordinator.data[ATTR_COVER_HEIGHT]
             attributes[ATTR_COVER_SETTING] = self._coordinator.data[ATTR_COVER_SETTING]
+            attributes[ATTR_SUN_STATE] = self._coordinator.data[ATTR_SUN_STATE]
 
         return attributes

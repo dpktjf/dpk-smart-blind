@@ -20,20 +20,26 @@
             },
             "vertical": {
                 "data": {
+                    "default_percentage": "Default Position",
+                    "delta_position": "Minimum position adjustment",
+                    "delta_time": "Minimum interval between position changes",
                     "set_azimuth": "Window Azimuth",
                     "window_height": "Window Height",
                     "distance_shaded_area": "Shaded Area",
                     "fov_left": "Field of view left",
                     "fov_right": "Field of view right",
-                    "group": "Cover Entities"
+                    "cover": "Cover Entity"
                 },
                 "data_description": {
+                    "delta_position": "Minimum change in position required before adjusting the cover's position",
+                    "delta_time": "Minimum time interval between position changes; minimum is 2 minutes",
+                    "default_percentage": "Default cover position as a percentage",
                     "set_azimuth": "Adjust Azimuth of window",
                     "window_height": "Specify window height in meters",
                     "distance_shaded_area": "Distance from cover to shaded area in meters",
                     "fov_left": "Field of view angle to the left of the window center",
                     "fov_right": "Field of view angle to the right of the window center",
-                    "group": "Select entities to control via integration"
+                    "cover": "Select entity to control via integration"
                 }
             }
         }

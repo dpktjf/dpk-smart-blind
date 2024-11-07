@@ -13,7 +13,7 @@ from homeassistant.config_entries import (
 )
 
 # https://github.com/home-assistant/core/blob/master/homeassistant/const.py
-from homeassistant.const import CONF_NAME, DEGREE, PERCENTAGE, UnitOfLength
+from homeassistant.const import CONF_NAME, DEGREE, PERCENTAGE, UnitOfLength, UnitOfTime
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import selector
 
@@ -21,8 +21,10 @@ from .const import (
     _LOGGER,
     CONF_AZIMUTH,
     CONF_DEFAULT_HEIGHT,
+    CONF_DELTA_POSITION,
+    CONF_DELTA_TIME,
     CONF_DISTANCE,
-    CONF_ENTITIES,
+    CONF_ENTITY,
     CONF_FOV_LEFT,
     CONF_FOV_RIGHT,
     CONF_HEIGHT_WIN,
@@ -38,6 +40,22 @@ CONFIG_SCHEMA = vol.Schema(
 
 OPTIONS = vol.Schema(
     {
+        vol.Required(CONF_DELTA_POSITION, default=5): selector.NumberSelector(
+            selector.NumberSelectorConfig(
+                min=1,
+                max=90,
+                step=1,
+                mode=selector.NumberSelectorMode.SLIDER,
+                unit_of_measurement=PERCENTAGE,
+            )
+        ),
+        vol.Required(CONF_DELTA_TIME, default=2): selector.NumberSelector(
+            selector.NumberSelectorConfig(
+                min=1,
+                mode=selector.NumberSelectorMode.BOX,
+                unit_of_measurement=UnitOfTime.MINUTES,
+            )
+        ),
         vol.Required(CONF_AZIMUTH, default=180): selector.NumberSelector(
             selector.NumberSelectorConfig(
                 min=0,
@@ -69,9 +87,9 @@ OPTIONS = vol.Schema(
 
 VERTICAL_OPTIONS = vol.Schema(
     {
-        vol.Optional(CONF_ENTITIES, default=[]): selector.EntitySelector(
+        vol.Optional(CONF_ENTITY, default=[]): selector.EntitySelector(
             selector.EntitySelectorConfig(
-                multiple=True,
+                multiple=False,
                 filter=selector.EntityFilterSelectorConfig(
                     domain="cover",
                     supported_features=["cover.CoverEntityFeature.SET_POSITION"],
@@ -181,9 +199,12 @@ class ConfigFlowHandler(ConfigFlow, domain=DOMAIN):
                 CONF_NAME: self.config[CONF_NAME],
             },
             options={
+                CONF_AZIMUTH: self.config.get(CONF_AZIMUTH),
                 CONF_DEFAULT_HEIGHT: self.config.get(CONF_DEFAULT_HEIGHT),
+                CONF_DELTA_POSITION: self.config.get(CONF_DELTA_POSITION),
+                CONF_DELTA_TIME: self.config.get(CONF_DELTA_TIME),
                 CONF_DISTANCE: self.config.get(CONF_DISTANCE),
-                CONF_ENTITIES: self.config.get(CONF_ENTITIES),
+                CONF_ENTITY: self.config.get(CONF_ENTITY),
                 CONF_FOV_LEFT: self.config.get(CONF_FOV_LEFT),
                 CONF_FOV_RIGHT: self.config.get(CONF_FOV_RIGHT),
                 CONF_HEIGHT_WIN: self.config.get(CONF_HEIGHT_WIN),

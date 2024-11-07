@@ -39,7 +39,7 @@ class DPKTradingDataUpdateCoordinator(DataUpdateCoordinator):
             hass=hass,
             logger=LOGGER,
             name=DOMAIN,
-            update_interval=timedelta(minutes=10),
+            update_interval=timedelta(minutes=client.delta_time),
         )
 
     async def _async_update_data(self) -> Any:
@@ -56,6 +56,13 @@ class DPKTradingDataUpdateCoordinator(DataUpdateCoordinator):
     ) -> None:
         """Fetch and process state change event."""
         _LOGGER.debug("Entity state change: %s", event)
+        """self.state_change = True"""
+
+    async def async_check_cover_state_change(
+        self, event: Event[EventStateChangedData]
+    ) -> None:
+        """Fetch and process state change event for cover entities."""
+        _LOGGER.debug("Cover Entity state change: %s", event)
         """self.state_change = True"""
 
     @property

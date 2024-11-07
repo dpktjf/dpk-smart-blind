@@ -20,7 +20,7 @@ from homeassistant.helpers.event import (
 )
 
 from .api import DPKSmartBlindAPI
-from .const import _LOGGER
+from .const import _LOGGER, CONF_ENTITY
 from .coordinator import DPKTradingDataUpdateCoordinator
 from .data import DPKSmartBlindData
 
@@ -61,6 +61,16 @@ async def async_setup_entry(
             hass,
             _entities,
             coordinator.async_check_entity_state_change,
+        )
+    )
+
+    _covers = []
+    _covers.append(entry.options.get(CONF_ENTITY))
+    entry.async_on_unload(
+        async_track_state_change_event(
+            hass,
+            _covers,
+            coordinator.async_check_cover_state_change,
         )
     )
 
