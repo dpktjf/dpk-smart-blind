@@ -28,7 +28,8 @@
                     "distance_shaded_area": "Shaded Area",
                     "fov_left": "Field of view left",
                     "fov_right": "Field of view right",
-                    "cover": "Cover Entity"
+                    "cover": "Cover Entity",
+                    "weather_entity": "Weather entity (optional)"
                 },
                 "data_description": {
                     "delta_position": "Minimum change in position required before adjusting the cover's position",
@@ -39,7 +40,8 @@
                     "distance_shaded_area": "Distance from cover to shaded area in meters",
                     "fov_left": "Field of view angle to the left of the window center",
                     "fov_right": "Field of view angle to the right of the window center",
-                    "cover": "Select entity to control via integration"
+                    "cover": "Select entity to control via integration",
+                    "weather_entity": "Monitors weather conditions, and outside temperature"
                 }
             }
         }

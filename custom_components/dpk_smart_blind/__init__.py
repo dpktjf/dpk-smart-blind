@@ -20,7 +20,7 @@ from homeassistant.helpers.event import (
 )
 
 from .api import DPKSmartBlindAPI
-from .const import _LOGGER, CONF_ENTITY
+from .const import _LOGGER, CONF_ENTITY, CONF_WEATHER_ENTITY
 from .coordinator import DPKTradingDataUpdateCoordinator
 from .data import DPKSmartBlindData
 
@@ -55,7 +55,11 @@ async def async_setup_entry(
     )
 
     coordinator = DPKTradingDataUpdateCoordinator(api, hass)
+    _weather_entity = entry.options.get(CONF_WEATHER_ENTITY)
     _entities = ["sun.sun"]
+    for entity in [_weather_entity]:
+        if entity is not None:
+            _entities.append(entity)  # noqa: PERF401
     entry.async_on_unload(
         async_track_state_change_event(
             hass,

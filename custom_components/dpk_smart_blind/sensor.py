@@ -13,6 +13,7 @@ from homeassistant.components.sensor.const import SensorDeviceClass, SensorState
 from homeassistant.const import (
     DEGREE,
     PERCENTAGE,
+    STATE_UNKNOWN,
     UnitOfLength,
 )
 from homeassistant.core import HomeAssistant

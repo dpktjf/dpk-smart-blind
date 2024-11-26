@@ -27,6 +27,9 @@ CONF_FOV_RIGHT = "fov_right"
 CONF_HEIGHT_WIN = "window_height"
 CONF_MAX_ELEVATION = "max_elevation"
 CONF_MIN_ELEVATION = "min_elevation"
+CONF_WEATHER_ENTITY = "weather_entity"
+CONF_WEATHER_STATE = "weather_state"
+
 
 ATTR_AZIMUTH = "azimuth"
 ATTR_ELEVATION = "elevation"

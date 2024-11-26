@@ -28,6 +28,8 @@ from .const import (
     CONF_FOV_LEFT,
     CONF_FOV_RIGHT,
     CONF_HEIGHT_WIN,
+    CONF_WEATHER_ENTITY,
+    CONF_WEATHER_STATE,
     CONFIG_FLOW_VERSION,
     DOMAIN,
 )
@@ -35,6 +37,37 @@ from .const import (
 CONFIG_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_NAME): selector.TextSelector(),
+    }
+)
+
+WEATHER_OPTIONS = vol.Schema(
+    {
+        vol.Optional(
+            CONF_WEATHER_STATE, default=["sunny", "partlycloudy", "cloudy", "clear"]
+        ): selector.SelectSelector(
+            selector.SelectSelectorConfig(
+                multiple=True,
+                sort=False,
+                options=[
+                    "clear-night",
+                    "clear",
+                    "cloudy",
+                    "fog",
+                    "hail",
+                    "lightning",
+                    "lightning-rainy",
+                    "partlycloudy",
+                    "pouring",
+                    "rainy",
+                    "snowy",
+                    "snowy-rainy",
+                    "sunny",
+                    "windy",
+                    "windy-variant",
+                    "exceptional",
+                ],
+            )
+        )
     }
 )
 
@@ -82,8 +115,13 @@ OPTIONS = vol.Schema(
                 unit_of_measurement=DEGREE,
             )
         ),
+        vol.Optional(
+            CONF_WEATHER_ENTITY, default=vol.UNDEFINED
+        ): selector.EntitySelector(
+            selector.EntityFilterSelectorConfig(domain="weather")
+        ),
     }
-)
+).extend(WEATHER_OPTIONS.schema)
 
 VERTICAL_OPTIONS = vol.Schema(
     {
@@ -208,6 +246,8 @@ class ConfigFlowHandler(ConfigFlow, domain=DOMAIN):
                 CONF_FOV_LEFT: self.config.get(CONF_FOV_LEFT),
                 CONF_FOV_RIGHT: self.config.get(CONF_FOV_RIGHT),
                 CONF_HEIGHT_WIN: self.config.get(CONF_HEIGHT_WIN),
+                CONF_WEATHER_ENTITY: self.config.get(CONF_WEATHER_ENTITY),
+                CONF_WEATHER_STATE: self.config.get(CONF_WEATHER_STATE),
             },
         )
 

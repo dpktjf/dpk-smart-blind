@@ -91,16 +91,16 @@ class DPKSmartBlindAPI:
         self._session = session
         self._states = states
 
-        self._last_azimuth = STATE_UNKNOWN
+        self._last_azimuth = None
         self._now = dt.now(ZoneInfo(self._hass.config.time_zone))
 
         self._calc_data = {}
-        self._calc_data[ATTR_AZIMUTH] = STATE_UNKNOWN
-        self._calc_data[ATTR_ELEVATION] = STATE_UNKNOWN
-        self._calc_data[ATTR_SHADOW_LENGTH] = STATE_UNKNOWN
-        self._calc_data[ATTR_COVER_HEIGHT] = STATE_UNKNOWN
-        self._calc_data[ATTR_COVER_SETTING] = STATE_UNKNOWN
-        self._calc_data[ATTR_SUN_STATE] = STATE_UNKNOWN
+        self._calc_data[ATTR_AZIMUTH] = None
+        self._calc_data[ATTR_ELEVATION] = None
+        self._calc_data[ATTR_SHADOW_LENGTH] = None
+        self._calc_data[ATTR_COVER_HEIGHT] = None
+        self._calc_data[ATTR_COVER_SETTING] = None
+        self._calc_data[ATTR_SUN_STATE] = None
 
     async def _get(self, ent: str) -> float:
         st = self._states.get(ent)
@@ -188,6 +188,12 @@ class DPKSmartBlindAPI:
             ),
             1,
         )
+        """
+        TODO: when early, then need some default calcs, such as whatever
+        the blind position is should be the cover height and associated
+        settings...
+        That comes from coordinator.async_check_cover_state_change()
+        """
         if self._calc_data[ATTR_SUN_STATE] == StateOfSunInWindow.JUST_LEFT:
             """Need to reset the blind to its default"""
             self._calc_data[ATTR_COVER_HEIGHT] = (
@@ -240,7 +246,7 @@ class DPKSmartBlindAPI:
     @property
     def last_azimuth(self) -> float:
         """Calculate azimuth from last invocation."""
-        if self._last_azimuth == STATE_UNKNOWN:
+        if self._last_azimuth is None:
             local_last = dt.now(ZoneInfo(self._hass.config.time_zone))
             local_last -= td(minutes=self.delta_time)
             _LOGGER.debug("local_last=%s", local_last)
