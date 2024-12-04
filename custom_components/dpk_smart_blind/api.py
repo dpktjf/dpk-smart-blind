@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING, Any
 from zoneinfo import ZoneInfo
 
 import astral.sun
-from homeassistant.const import STATE_UNKNOWN
 from homeassistant.helpers.sun import get_astral_location
 from numpy import radians as rad
 from numpy import tan
