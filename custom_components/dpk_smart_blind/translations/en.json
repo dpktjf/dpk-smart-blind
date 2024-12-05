@@ -18,30 +18,47 @@
                     "shaded_area": "Desired distance from cover to shaded area in meters"
                 }
             },
-            "vertical": {
+            "window": {
+                "title": "Window Settings",
                 "data": {
-                    "default_percentage": "Default Position",
-                    "delta_position": "Minimum position adjustment",
-                    "delta_time": "Minimum interval between position changes",
                     "set_azimuth": "Window Azimuth",
                     "window_height": "Window Height",
                     "distance_shaded_area": "Shaded Area",
                     "fov_left": "Field of view left",
                     "fov_right": "Field of view right",
-                    "cover": "Cover Entity",
-                    "weather_entity": "Weather entity (optional)"
+                    "cover": "Cover Entity"
                 },
                 "data_description": {
-                    "delta_position": "Minimum change in position required before adjusting the cover's position",
-                    "delta_time": "Minimum time interval between position changes; minimum is 2 minutes",
-                    "default_percentage": "Default cover position as a percentage",
                     "set_azimuth": "Adjust Azimuth of window",
                     "window_height": "Specify window height in meters",
                     "distance_shaded_area": "Distance from cover to shaded area in meters",
                     "fov_left": "Field of view angle to the left of the window center",
                     "fov_right": "Field of view angle to the right of the window center",
-                    "cover": "Select entity to control via integration",
-                    "weather_entity": "Monitors weather conditions, and outside temperature"
+                    "cover": "Select entity to control via integration"
+                }
+            },
+            "automation": {
+                "title": "Automation Settings",
+                "data": {
+                    "default_percentage": "Default Position",
+                    "delta_position": "Minimum position adjustment",
+                    "delta_time": "Minimum interval between position changes"
+                },
+                "data_description": {
+                    "delta_position": "Minimum change in position required before adjusting the cover's position",
+                    "delta_time": "Minimum time interval between position changes; minimum is 2 minutes",
+                    "default_percentage": "Default cover position as a percentage"
+                }
+            },
+            "climate": {
+                "title": "Climate Settings",
+                "data": {
+                    "weather_entity": "Weather entity",
+                    "weather_state": "Weather Conditions"
+                },
+                "data_description": {
+                    "weather_entity": "Monitors weather conditions, and outside temperature",
+                    "weather_state": "Choose the weather conditions that enable automatic window control."
                 }
             }
         }
@@ -49,29 +66,56 @@
     "options": {
         "step": {
             "init": {
+                "description": "Choose next step:",
                 "menu_options": {
-                    "automation": "Modify Automation Configuration",
-                    "blind": "Fine-tune Blind Settings",
-                    "climate": "Edit Climate Configuration",
-                    "weather": "Edit Weather Configuration",
-                    "blind_spot": "Setup Blindspot",
-                    "interp": "Range Adjustment"
-                },
+                    "blind": "Fine-tune Window Settings",
+                    "climate": "Edit Climate Settings",
+                    "automation": "Edit Automation Settings"
+                }
+            },
+            "window": {
+                "title": "Window Settings",
                 "data": {
-                    "window_height": "Window height",
-                    "shaded_area": "Distance from cover to shaded area in meters"
+                    "set_azimuth": "Window Azimuth",
+                    "window_height": "Window Height",
+                    "distance_shaded_area": "Shaded Area",
+                    "fov_left": "Field of view left",
+                    "fov_right": "Field of view right",
+                    "cover": "Cover Entity"
                 },
                 "data_description": {
-                    "window_height": "Height of blind casting shadown in window in meters",
-                    "shaded_area": "Desired distance from cover to shaded area in meters"
+                    "set_azimuth": "Adjust Azimuth of window",
+                    "window_height": "Specify window height in meters",
+                    "distance_shaded_area": "Distance from cover to shaded area in meters",
+                    "fov_left": "Field of view angle to the left of the window center",
+                    "fov_right": "Field of view angle to the right of the window center",
+                    "cover": "Select entity to control via integration"
+                }
+            },
+            "automation": {
+                "title": "Automation Settings",
+                "data": {
+                    "default_percentage": "Default Position",
+                    "delta_position": "Minimum position adjustment",
+                    "delta_time": "Minimum interval between position changes"
+                },
+                "data_description": {
+                    "delta_position": "Minimum change in position required before adjusting the cover's position",
+                    "delta_time": "Minimum time interval between position changes; minimum is 2 minutes",
+                    "default_percentage": "Default cover position as a percentage"
+                }
+            },
+            "climate": {
+                "title": "Climate Settings",
+                "data": {
+                    "weather_entity": "Weather entity",
+                    "weather_state": "Weather Conditions"
+                },
+                "data_description": {
+                    "weather_entity": "Monitors weather conditions, and outside temperature",
+                    "weather_state": "Choose the weather conditions that enable automatic window control."
                 }
             }
-        }
-    },
-    "services": {
-        "reload": {
-            "name": "[%key:common::action::reload%]",
-            "description": "Reloads ...."
         }
     }
 }
