@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import logging
 from typing import TYPE_CHECKING, Any
 
 from homeassistant.components.sensor import (
@@ -13,13 +12,14 @@ from homeassistant.components.sensor.const import SensorDeviceClass, SensorState
 from homeassistant.const import (
     DEGREE,
     PERCENTAGE,
-    STATE_UNKNOWN,
     UnitOfLength,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from custom_components.dpk_smart_blind.const import (
+from .const import (
+    _LOGGER,
     ATTR_AZIMUTH,
     ATTR_COVER_HEIGHT,
     ATTR_COVER_SETTING,
@@ -32,12 +32,12 @@ from custom_components.dpk_smart_blind.const import (
     DOMAIN,
     MANUFACTURER,
 )
+from .coordinator import DPKTradingDataUpdateCoordinator
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-    from .coordinator import DPKTradingDataUpdateCoordinator
     from .data import DPKSmartBlindConfigEntry
 
 SENSOR_TYPES: tuple[SensorEntityDescription, ...] = (
@@ -71,7 +71,6 @@ SENSOR_TYPES: tuple[SensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
     ),
 )
-_LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
@@ -88,15 +87,17 @@ async def async_setup_entry(
         DPKSmartBlindSensor(
             name,
             config_entry.entry_id,
-            description,
+            sensor,
             coordinator,
         )
-        for description in SENSOR_TYPES
+        for sensor in SENSOR_TYPES
     ]
     async_add_entities(entities)
 
 
-class DPKSmartBlindSensor(SensorEntity):
+class DPKSmartBlindSensor(
+    CoordinatorEntity[DPKTradingDataUpdateCoordinator], SensorEntity
+):
     """Smart Blind Sensor class."""
 
     _attr_should_poll = False
@@ -106,17 +107,17 @@ class DPKSmartBlindSensor(SensorEntity):
         self,
         name: str,
         entry_id: str,
-        entity_description: SensorEntityDescription,
+        sensor: SensorEntityDescription,
         coordinator: DPKTradingDataUpdateCoordinator,
     ) -> None:
         """Initialize the sensor class."""
-        self.entity_description = entity_description
-        self._key = entity_description.key
+        self.entity_description = sensor
+        self._key = sensor.key
         self._coordinator = coordinator
         self.states: dict[str, Any] = {}
 
-        self._attr_name = f"{name} {entity_description.name}"
-        self._attr_unique_id = f"{entry_id}-{name}-{entity_description.name}"
+        self._attr_name = f"{name} {sensor.name}"
+        self._attr_unique_id = f"{entry_id}-{name}-{sensor.name}"
 
         self._attr_device_info = DeviceInfo(
             entry_type=DeviceEntryType.SERVICE,

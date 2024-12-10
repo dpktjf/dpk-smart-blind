@@ -74,7 +74,9 @@ OPTIONS = vol.Schema(
 
 WINDOW_OPTIONS = vol.Schema(
     {
-        vol.Required(CONF_ENTITY, default=[]): selector.EntitySelector(
+        vol.Required(
+            CONF_ENTITY, default=["cover.pi01_study_position_blind"]
+        ): selector.EntitySelector(
             selector.EntitySelectorConfig(
                 multiple=False,
                 filter=selector.EntityFilterSelectorConfig(
@@ -116,7 +118,7 @@ WINDOW_OPTIONS = vol.Schema(
 CLIMATE_OPTIONS = vol.Schema(
     {
         vol.Required(
-            CONF_WEATHER_ENTITY, default=vol.UNDEFINED
+            CONF_WEATHER_ENTITY, default=["weather.forecast_home"]
         ): selector.EntitySelector(
             selector.EntityFilterSelectorConfig(domain="weather")
         ),

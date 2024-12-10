@@ -31,6 +31,7 @@ if TYPE_CHECKING:
 
 PLATFORMS: list[Platform] = [
     Platform.SENSOR,
+    Platform.BINARY_SENSOR,
 ]
 
 # https://homeassistantapi.readthedocs.io/en/latest/api.html
@@ -101,4 +102,7 @@ async def async_unload_entry(
     entry: DPKSmartBlindConfigEntry,
 ) -> bool:
     """Handle removal of an entry."""
+    _LOGGER.debug("removing...")
+    coordinator = entry.runtime_data.coordinator
+    coordinator.async_cancel_update_listener()
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)

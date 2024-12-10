@@ -20,6 +20,7 @@ from custom_components.dpk_smart_blind.const import (
     ATTR_ELEVATION,
     ATTR_NOW,
     ATTR_SHADOW_LENGTH,
+    ATTR_SUN_IN_WINDOW,
     ATTR_SUN_STATE,
     CONF_AZIMUTH,
     CONF_DEFAULT_HEIGHT,
@@ -100,6 +101,7 @@ class DPKSmartBlindAPI:
         self._calc_data[ATTR_COVER_HEIGHT] = None
         self._calc_data[ATTR_COVER_SETTING] = None
         self._calc_data[ATTR_SUN_STATE] = None
+        self._calc_data[ATTR_SUN_IN_WINDOW] = None
 
     async def _get(self, ent: str) -> float:
         st = self._states.get(ent)
@@ -179,6 +181,9 @@ class DPKSmartBlindAPI:
         self._calc_data[ATTR_SUN_STATE] = self.sun_in_window_state(
             _azimuth, self.last_azimuth
         )
+        self._calc_data[ATTR_SUN_IN_WINDOW] = (
+            self._calc_data[ATTR_SUN_STATE] == StateOfSunInWindow.IN_FRONT
+        )
         self._last_azimuth = _azimuth
 
         self._calc_data[ATTR_SHADOW_LENGTH] = round(
@@ -208,6 +213,11 @@ class DPKSmartBlindAPI:
                 self._config.options[CONF_DISTANCE] * tan(rad(_elevation)), 1
             )
             self._calc_data[ATTR_COVER_SETTING] = self.cover_setting
+
+    @property
+    def name(self) -> str:
+        """Getter to return name."""
+        return self._name
 
     @property
     def azimuth(self) -> float:

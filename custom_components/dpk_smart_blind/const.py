@@ -12,7 +12,6 @@ ATTRIBUTION = "Data provided by the sun"
 MANUFACTURER = "DPK"
 CONFIG_FLOW_VERSION = 1
 
-DEFAULT_NAME = "DPK Smart Blind"
 DEFAULT_RETRY = 60
 
 # entities for data
@@ -37,7 +36,8 @@ ATTR_SHADOW_LENGTH = "calc_shadow_length"
 ATTR_COVER_HEIGHT = "calc_cover_height"
 ATTR_NOW = "utc_now"
 ATTR_COVER_SETTING = "cover_setting"
-ATTR_SUN_STATE = "sun_in_window"
+ATTR_SUN_STATE = "sun_state"
+ATTR_SUN_IN_WINDOW = "sun_in_window"
 
 
 class StateOfSunInWindow(StrEnum):
