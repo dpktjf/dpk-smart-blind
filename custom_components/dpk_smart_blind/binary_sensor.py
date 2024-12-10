@@ -15,6 +15,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
     _LOGGER,
+    ATTR_MANUAL_OVERRIDE,
     ATTR_SUN_IN_WINDOW,
     ATTRIBUTION,
     DEFAULT_NAME,
@@ -34,6 +35,12 @@ SENSOR_TYPES: tuple[BinarySensorEntityDescription, ...] = (
         key=ATTR_SUN_IN_WINDOW,
         name="Smart Blind Sun In Window",
         icon="mdi:sun-angle",
+        device_class=BinarySensorDeviceClass.RUNNING,
+    ),
+    BinarySensorEntityDescription(
+        key=ATTR_MANUAL_OVERRIDE,
+        name="Smart Blind Manual Override",
+        icon="mdi:blinds",
         device_class=BinarySensorDeviceClass.RUNNING,
     ),
 )

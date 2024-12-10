@@ -38,6 +38,7 @@ ATTR_NOW = "utc_now"
 ATTR_COVER_SETTING = "cover_setting"
 ATTR_SUN_STATE = "sun_state"
 ATTR_SUN_IN_WINDOW = "sun_in_window"
+ATTR_MANUAL_OVERRIDE = "manual_override"
 
 
 class StateOfSunInWindow(StrEnum):

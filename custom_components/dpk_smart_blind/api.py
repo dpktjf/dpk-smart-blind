@@ -18,6 +18,7 @@ from custom_components.dpk_smart_blind.const import (
     ATTR_COVER_HEIGHT,
     ATTR_COVER_SETTING,
     ATTR_ELEVATION,
+    ATTR_MANUAL_OVERRIDE,
     ATTR_NOW,
     ATTR_SHADOW_LENGTH,
     ATTR_SUN_IN_WINDOW,
@@ -102,6 +103,7 @@ class DPKSmartBlindAPI:
         self._calc_data[ATTR_COVER_SETTING] = None
         self._calc_data[ATTR_SUN_STATE] = None
         self._calc_data[ATTR_SUN_IN_WINDOW] = None
+        self._calc_data[ATTR_MANUAL_OVERRIDE] = None
 
     async def _get(self, ent: str) -> float:
         st = self._states.get(ent)
